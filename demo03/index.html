@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>react demo</title>
+	<script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+	<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+	<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+</head>
+<body>
+	<div id="example"></div>
+	
+	<script type="text/babel">
+	var NewComponent = React.createClass({
+		propTypes:{
+			title:React.PropTypes.string.isRequired
+		},
+		getInitialState:function(){
+			return {
+				opacity:1
+			}
+		},
+		componentDidMount:function(){
+			//此处不能使用监听函数，否则this指向会错乱
+			this.timer = setInterval(()=>{
+				var opacity = this.state.opacity
+				opacity -=0.05
+				if(opacity < 0){
+					opacity = 1
+				}
+				this.setState({opacity:opacity})
+			},100)
+			var dom = this.refs.dd
+			console.log(dom)
+		},
+		render:function(){
+			//state改变时，render会被触发，因此造成了淡入淡出的效果
+			return <div style={{opacity:this.state.opacity}} ref='dd'>{this.props.title}</div>
+		}
+	})
+	
+	var title = [2,3,4]
+	var nameList = ["cty","zw"]
+		ReactDOM.render(
+			<h1>
+				<NewComponent title={title}/>
+			</h1>,
+			document.getElementById('example')
+		)
+		
+	</script>
+</body>
+</html>

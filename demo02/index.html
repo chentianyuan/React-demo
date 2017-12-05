@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>react demo</title>
+	<script src="https://cdn.bootcss.com/react/15.4.2/react.min.js"></script>
+	<script src="https://cdn.bootcss.com/react/15.4.2/react-dom.min.js"></script>
+	<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+</head>
+<body>
+	<div id="example"></div>
+	
+<script type="text/babel">
+	
+		//学习组件
+	var ReactComponent = React.createClass({
+		render:function(){
+			//向React的createClass方法中传入配置参数，render只是其中一个比较重要的参数，render作为函数返回该组件的html
+			//在组件上传值可以通过this.props来获取,<xxcomponent name="xxx">
+			return <h1>第一个react组件,{this.props.name}</h1>
+		}
+	})
+	
+	//所有的组件名第一个字母必须大写
+	var ClickComponent = React.createClass({
+		getDefaultProps:function(){
+			console.log('第一阶段，getDefaultPropos去获取组件上传递的值,但是还没获取到')
+		},
+		getInitialState : function(){
+			console.log('第二阶段，getInitialState初始化每个实例特有的状态，在这里可以获取组件需要的异步数据')
+			//组件初始化时返回数据对象
+			return {liked:false}
+		},
+		componentWillMount:function(){
+			console.log('第三阶段，componentWillMount此时还未渲染到页面上，修改状态的最后一次机会')
+		},
+		handleClick : function(event){
+			//处理组件实例的数据
+			this.setState({liked:!this.state.liked},()=>{
+				console.log('changelove')
+			})
+		},
+		render:function(){
+			console.log('第四阶段，render只能访问this.props和this.state，只有一个顶层组件，不允许修改状态和DOM输出')
+			//通过this.state获取组件内数据
+			var text = this.state.liked?'喜欢':'不喜欢'
+			return (<div onClick={this.handleClick}>你<b>{text}</b>我</div>)
+		},
+		componentDidMount:function(){
+			console.log(`第五阶段，componentDidMount成功render并渲染完成真实DOM后触发，可以修改DOM ${this.props.name}`)
+		}
+	})
+	
+	var nameList = [<h1>cty</h1>,<h1>zw</h1>]
+	ReactDOM.render(
+		<div>
+			{nameList}			
+			<ClickComponent name="123"/>
+		</div>,
+		document.getElementById('example')
+	)
+	
+</script>
+</body>
+</html>
