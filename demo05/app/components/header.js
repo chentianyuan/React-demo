@@ -2,8 +2,8 @@ import React from 'react'
 import './header.less'
 
 class Header extends React.Component{
-	constructor(){
-		super()
+	constructor(props){
+		super(props)
 	}
 	render(){
 		return (
