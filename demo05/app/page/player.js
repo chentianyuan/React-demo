@@ -1,6 +1,7 @@
 import React from 'react'
 import Progress from '../components/progress'
 import './player.less'
+import Pubsub from 'pubsub-js'
 import {Link} from 'react-router'
 
 let duration = null
@@ -10,7 +11,9 @@ class Player extends React.Component{
 		this.state = {
 			progress:0,
 			volume:0,
-			isPlay:true
+			isPlay:true,
+			leftTime:'',
+			playfns:['repeat-cycle','repeat-once','repeat-random']
 		}
 	}
 	
@@ -25,21 +28,61 @@ class Player extends React.Component{
 	}
 	
 	play(){
+		//自定义函数需要使用React对象时需要传入this，使用箭头函数或bind函数
 		this.state.isPlay ? $('#player').jPlayer('pause') : $('#player').jPlayer('play')
 		this.setState({
 			isPlay:!this.state.isPlay
 		})
 	}
 	
+	playPrev(){
+		Pubsub.publish('PLAY_PREV')
+	}
+	
+	playNext(){
+		Pubsub.publish('PLAY_NEXT')
+	}
+	
+	formatTime(time){
+		time = Math.floor(time)
+		let miniutes = Math.floor(time / 60)
+		let seconds = Math.floor(time % 60)
+		
+		seconds = seconds < 10 ? `0${seconds}` : seconds
+		return `${miniutes}:${seconds}`
+		
+	}
+	changeplayfn(){
+		let curType = this.refs.playType.className
+		let newIndex = null
+		let typeLength = this.state.playfns.length		
+		this.state.playfns.forEach((value,index)=>{
+			//Boolean(-1)返回true
+			if(curType.indexOf(value) != -1){
+				if(index==2){
+					Pubsub.publish('PLAY_CYCLE')
+				}else if(index==0){
+					Pubsub.publish('PLAY_ONCE')
+				}else{
+					Pubsub.publish('PLAY_RANDOM')
+				}
+				newIndex = (index + 1) % typeLength
+				this.refs.playType.className = `icon ${this.state.playfns[newIndex]}`
+			}
+		})
+	}
 	componentDidMount(){
 		//对播放时间的监听，不断触发this.setState，进而触发render 
 		$('#player').bind($.jPlayer.event.timeupdate,(e)=>{
 			duration = e.jPlayer.status.duration
 			this.setState({
 				volume:e.jPlayer.options.volume * 100,
-				progress:e.jPlayer.status.currentPercentAbsolute
+				progress:e.jPlayer.status.currentPercentAbsolute,
+				leftTime:this.formatTime(duration * (1 - e.jPlayer.status.currentPercentAbsolute / 100))
 			})
 		})
+		
+		//this.refs.playType.className =`icon ${this.state.playfns[0]}`
 	}
 	
 	componentWillUnMount(){
@@ -76,12 +119,12 @@ class Player extends React.Component{
 					</div>
 					<div className="mt35 row">
 						<div>
-							<i className="icon prev"></i>
+							<i className="icon prev" onClick={this.playPrev}></i>
 							<i className={`icon ml20 ${this.state.isPlay?'pause':'play'}`} onClick={()=>{this.play()}}></i>
-							<i className="icon next ml20"></i>
+							<i className="icon next ml20" onClick={this.playNext}></i>
 						</div>
 						<div>
-							<i className="icon repeat-cycle"></i>
+							<i className="icon repeat-cycle" onClick={this.changeplayfn.bind(this)} ref="playType"></i>
 						</div>
 					</div>
 				</div>
