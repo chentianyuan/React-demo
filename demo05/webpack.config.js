@@ -14,7 +14,7 @@ module.exports = {
 	],
 	output:{
 		path:path.join(__dirname,'/dist/'),
-		filename:"[name].js",
+		filename:'[name].js',
 		publicPath:'/'
 	},
 	//插件配置

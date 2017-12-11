@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xiaolin3303/react-music-player"
+    "url": "git+https://github.com/chentianyuan/React-demo"
   },  
   "dependencies": {
     "pubsub-js": "^1.5.4",
