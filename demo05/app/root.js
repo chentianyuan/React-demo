@@ -9,6 +9,7 @@ import Pubsub from 'pubsub-js'
 import { Router , IndexRoute , Link , Route , hashHistory } from 'react-router'
 import { MUSIC_LIST } from './config/musiclist'
 
+//更新
 class App extends React.Component{
 	constructor(){
 		super()
