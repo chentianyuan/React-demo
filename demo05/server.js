@@ -3,8 +3,9 @@ var WebpackDevServer = require('webpack-dev-server')
 var config = require('./webpack.config')
 
 new WebpackDevServer(webpack(config),{
+	//publicPath设置存放和检索静态文件的位置
 	publicPath:config.output.publicePath,
-	got:true,
+	hot:true,
 	historyApiFallback:true,
 	quiet:false,
 	noInfo:false,

@@ -11,6 +11,7 @@ render(
 	document.getElementById('root')
 )
 
+//通知接收HMR对象实现自动刷新
 if(module.hot){
 	module.hot.accept('./root',()=>{
 		const Newroot = require('./root').default

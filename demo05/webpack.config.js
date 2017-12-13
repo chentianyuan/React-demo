@@ -25,8 +25,8 @@ module.exports = {
 			filename:'./index.html'
 		}),
 		new webpack.optimize.OccurenceOrderPlugin(),
-		new webpack.HotModuleReplacementPlugin(),
-		new webpack.NoErrorsPlugin(),
+		new webpack.HotModuleReplacementPlugin(), //启动全局HMR
+		new webpack.NoErrorsPlugin(), //不提示错误
 		new webpack.DefinePlugin({
 			'process.env.NODE_ENV':JSON.stringify('developement')
 		})
